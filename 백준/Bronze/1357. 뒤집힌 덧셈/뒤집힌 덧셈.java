@@ -3,9 +3,14 @@ import java.util.*;
 class Main{
     public static int reverse (int a) {
         String s = Integer.toString(a);
-        StringBuffer sb = new StringBuffer(s);
-        String rs = sb.reverse().toString();
+        char[] arr = s.toCharArray();
+        char[] rsa = new char[arr.length];
         
+        for(int i = 0; i<arr.length; i++){
+            rsa[arr.length - 1 - i] = arr[i];
+        }
+        
+        String rs = new String(rsa);
         a = Integer.parseInt(rs);
         
         return a;
