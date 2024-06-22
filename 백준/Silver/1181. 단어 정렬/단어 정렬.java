@@ -21,14 +21,8 @@ class Main{
             }
         });
         for(int i = 0; i < n; i++){
-            if(i == 0) System.out.println(arr[i]);
-            //중복제거
-            else {
-                if(arr[i].equals(arr[i - 1]))
-                continue;
-                else
-                System.out.println(arr[i]);
-            }
+            if(i == 0 || !arr[i].equals(arr[i - 1])) 
+            System.out.println(arr[i]);
         }
     }
 }
