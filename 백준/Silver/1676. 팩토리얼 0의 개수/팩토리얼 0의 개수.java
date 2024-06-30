@@ -5,16 +5,15 @@ class Main {
         Scanner sc = new Scanner(System.in);
 
         int n = sc.nextInt();
-        BigInteger fac = BigInteger.ONE;
-
-        for(int i = 2; i <= n; i++) {
-            fac = fac.multiply(BigInteger.valueOf(i));
+        int cnt = 0;
+        
+        for(int i = 5; i <= n; i +=5) {
+            int num = i;
+            while(num % 5 == 0) {
+                num /= 5;
+                cnt++;
+            }
         }
-        int ans = 0;
-        while(fac.mod(BigInteger.TEN).equals(BigInteger.ZERO)) {
-            ans++;
-            fac = fac.divide(BigInteger.TEN);
-        }
-        System.out.println(ans);
+        System.out.println(cnt);
     }
 }
