@@ -7,7 +7,7 @@ class Solution {
         Arrays.sort(sets, (o1, o2) -> o1.length() - o2.length());
         Set<Integer> ans = new HashSet<>();
         ArrayList<Integer> list = new ArrayList<>();
-        
+
         for(String str : sets) {
             for(String num : str.split(",")) {
                 int n = Integer.parseInt(num);
