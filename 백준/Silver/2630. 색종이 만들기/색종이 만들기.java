@@ -14,10 +14,10 @@ class Main {
                 arr[i][j] = Integer.parseInt(st.nextToken());
             }
         }
-        System.out.println(check1(1, 1, n));
-        System.out.println(check(1, 1, n));
+        System.out.println(whitecheck(1, 1, n));
+        System.out.println(bluecheck(1, 1, n));
     }
-    private static int check(int col, int row, int n) {
+    private static int bluecheck(int col, int row, int n) {
         if(n==1) return arr[col][row];
         int cnt = 0;
         for (int i = col; i < col + n; i++) {
@@ -29,12 +29,12 @@ class Main {
         if(cnt == n * n) return 1;
         if(cnt == 0) return 0;
 
-        return  check(col, row, n/2) +
-                check(col + n/2, row, n/2) +
-                check(col, row + n/2, n/2) +
-                check(col + n/2, row + n/2, n/2);
+        return  bluecheck(col, row, n/2) +
+                bluecheck(col + n/2, row, n/2) +
+                bluecheck(col, row + n/2, n/2) +
+                bluecheck(col + n/2, row + n/2, n/2);
     }
-    private static int check1(int col, int row, int n) {
+    private static int whitecheck(int col, int row, int n) {
         if(n==1 && arr[col][row] == 0) return 1;
         int cnt = 0;
         for (int i = col; i < col + n; i++) {
@@ -46,9 +46,9 @@ class Main {
         if(cnt == n * n) return 1;
         if(cnt == 0) return 0;
 
-        return  check1(col, row, n/2) +
-                check1(col + n/2, row, n/2) +
-                check1(col, row + n/2, n/2) +
-                check1(col + n/2, row + n/2, n/2);
+        return  whitecheck(col, row, n/2) +
+                whitecheck(col + n/2, row, n/2) +
+                whitecheck(col, row + n/2, n/2) +
+                whitecheck(col + n/2, row + n/2, n/2);
     }
 }
