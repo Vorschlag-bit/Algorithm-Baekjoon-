@@ -7,28 +7,18 @@ class Main {
         int s = Integer.parseInt(br.readLine());
         String str = br.readLine();
         int ans = 0;
-        String ioi ="";
-        for (int i = 0; i < 2 * n + 1; i++) {
-            if(i % 2 == 0) ioi += "I";
-            else ioi += "O";
-        }
-        int l = ioi.length();
-        for(int i = 0; i <= s - l; i++) {
-            if(str.charAt(i) == 'I') {
-                boolean Check = true;
-                String sub = str.substring(i);
-                for(int j = 0; j < l; j++) {
-                    if(sub.charAt(j) != ioi.charAt(j)) {
-                        Check = !Check;
-                        break;
-                    }
-                }
-                if(Check) {
+        int pCnt = 0;
+        for(int i = 1; i < s - 1; i++) {
+            if(str.charAt(i - 1) == 'I' && str.charAt(i) == 'O' && str.charAt(i + 1) == 'I') {
+                pCnt++;
+                if(pCnt == n) {
                     ans++;
-                    if(i + 2 < s)
-                    i += 1;
+                    pCnt--;
                 }
+                // ioi패턴일 경우만 2칸 점프
+                i++;
             }
+            else pCnt = 0;
         }
         System.out.println(ans);
     }
