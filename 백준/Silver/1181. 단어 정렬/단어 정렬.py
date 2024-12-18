@@ -1,18 +1,15 @@
-def sort_word(word):
-    return len(word), word
+import sys
 
-n = int(input())  # 단어를 입력받을 단어의 개수
-words = []  # 단어를 입력받을 배열
+def sort_words(words):
+    sorted_words = dict(sorted(words.items(), key=lambda x: (x[1], x[0])))
+    return sorted_words
 
-# n개의 단어 입력받기
-for _ in range(n):
-    words.append(input())
+N = int(sys.stdin.readline())
+words = {}
+for _ in range(N):
+    word = sys.stdin.readline().strip()
+    words[word] = len(word)
 
-
-# 중복 제거를 위한 set 반환 후,
-# sort_word 함수를 사용해 정렬
-sorted_words = sorted(list(set(words)), key=sort_word)
-
+sorted_words = sort_words(words)
 for word in sorted_words:
     print(word)
-
