@@ -11,7 +11,4 @@ for i in arr:
 
 t = int(input().strip())
 
-if t in ans:
-    print(ans[t])
-else:
-    print(0)
+print(ans.get(t, 0))
