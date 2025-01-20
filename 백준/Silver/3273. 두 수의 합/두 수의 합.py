@@ -1,26 +1,20 @@
 import sys
 input = sys.stdin.readline
+n = int(input())
+seq = input().split()
+x = int(input())
 
-n = int(input().strip())
+max_value = 1000000
+arr = [0] * (max_value + 1)
 
-arr = list(map(int, input().split()))
-# 정렬
-arr = sorted(arr)
+result = 0
 
-t = int(input().strip())
-ans = 0
-l = 0
-r = n - 1
-while l < r:
-    sum = arr[l] + arr[r]
-    if sum == t:
-        l += 1
-        r -= 1
-        ans += 1
-    elif sum > t:
-        r -= 1
+for i in range (0, n):
+    num = int(seq[i])
+    y = x - num
+    if 0 <= y <= max_value and arr[y] == 1:
+        result += 1
+        arr[num] = 1
     else:
-        l += 1
-print(ans)
-
-
+        arr[num] = 1
+print(result)
