@@ -1,28 +1,23 @@
-import sys;
-from collections import deque;
+import sys
+from collections import deque
 
-dq = deque()
+q = deque()
+input = sys.stdin.readline
 
-arr = []
+n = int(input())
 flag = True
-n = int(sys.stdin.readline().strip())
-
-idx = 1
-for i in range(n):
-    num = int(sys.stdin.readline().strip())
-
-    while idx <= num:
-        dq.append(idx)
-        arr.append('+')
-        idx += 1
-    
-    if dq[-1] != num:
+result = []
+top = 1
+for _ in range(n):
+    num = int(input())
+    while top <= num:
+        q.append(top)
+        result.append('+')
+        top += 1
+    if q and q[-1] == num:
+        q.pop()
+        result.append('-')
+    else:
         flag = False
         break
-
-    dq.pop()
-    arr.append('-')
-
-print('\n'.join(arr) if flag else "NO")
-
-
+print("\n".join(result) if flag else "NO")
