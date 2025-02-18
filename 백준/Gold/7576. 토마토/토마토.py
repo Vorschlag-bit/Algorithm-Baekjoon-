@@ -18,12 +18,12 @@ def check(x, y):
 def bfs(q):
     while q:
         x, y = q.popleft()
+        current = tomato[x][y]
         for i in range(4):
-            nx = x + dx[i]
-            ny = y + dy[i]
+            nx, ny = x + dx[i], y + dy[i]
             if not check(nx, ny): continue
             if tomato[nx][ny] == 0:
-                tomato[nx][ny] = tomato[x][y] + 1
+                tomato[nx][ny] = current + 1
                 q.append((nx, ny))
 for i in range(n):
     for j in range(m):
@@ -38,8 +38,6 @@ for i in range(n):
         if tomato[i][j] == 0:
             flag = False
             break
-        if tomato[i][j] > 0:
-            ans = max(ans, tomato[i][j] - 1)
+        if tomato[i][j] > ans:
+            ans = tomato[i][j] - 1
 print(ans if flag else -1)
-
-
