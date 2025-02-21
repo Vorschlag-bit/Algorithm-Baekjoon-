@@ -6,15 +6,14 @@ def solution(b, t, words):
         return sum(c1 != c2 for c1, c2 in zip(str1, str2))
     n = len(words)
     
-    q.append((b, 0, [False] * n))
+    q.append(b)
+    dic = {b: 0}
     while q:
-        cur, cnt, visit = q.popleft()
+        cur = q.popleft()
         if cur == t:
-            ans = cnt
             break
         for i in range(n):
-            if not visit[i] and check_d(words[i], cur) == 1:
-                visit[i] = True
-                newV = visit[:]
-                q.append((words[i], cnt + 1, newV))
-    return ans
+            if words[i] not in dic and check_d(words[i], cur) == 1:
+                dic[words[i]] = dic[cur] + 1
+                q.append(words[i])
+    return dic.get(t , 0)
