@@ -20,6 +20,7 @@ while q:
     s, h, x, y = q.popleft()
     if x == n-1 and y == m-1:
         flag = True
+        break
     # 우선 4방향
     for i in range(4):
         nx = x + dx[i]
