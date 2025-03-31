@@ -45,6 +45,11 @@ def dfs(cnt, x, y):
         for c in range(k, n-1):
             # 현재 위치와 양옆에 사다리가 없는 경우만 추가 가능
             if arr[r][c] == 0:
+                if c > 0 and arr[r][c-1] == 1:  # 왼쪽에 사다리가 있는지 확인
+                    continue
+                if c < n-2 and arr[r][c+1] == 1:  # 오른쪽에 사다리가 있는지 확인
+                    continue
+                
                 arr[r][c] = 1  # 사다리 추가
                 # 다음 탐색 - 같은 위치에 연속해서 사다리를 놓을 수 없으므로 c+1부터 시작
                 dfs(cnt+1, r, c+2)
