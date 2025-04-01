@@ -7,28 +7,34 @@ for i in range(n):
         if arr[i][j] == 2: chickens.append((i,j))
         elif arr[i][j] == 1: houses.append((i,j))
 # 최소 치킨 거리
-min_ch_dis = float('inf')
-# 치킨집을 m개의 조합으로 구성하기
-comb = []
-def combination(l,new_arr,r):
-    if l == len(new_arr):
-        comb.append(new_arr[:])
-        return
-    for i in range(r,len(chickens)):
-        combination(l,new_arr + [i],i+1)
-combination(m,[],0)
+ans = float('inf')
 
-# 조합을 돌면서, 각 조합만의 최소 치킨 거리를 구하고, 그 치킨 거리 중 최소가 되는 값이 정답
-for c in comb:
-    # 도시의 치킨 거리 후보군
-    total_chickDis = 0
-    for h in houses:
-        hx,hy = h[0],h[1]
-        # 한 집의 치킨 거리
-        cD = 1000
-        for ch in c:
-            x,y = chickens[ch][0], chickens[ch][1]
-            cD = min(cD, abs(hx-x) + abs(hy-y))
-        total_chickDis += cD
-    min_ch_dis = min(min_ch_dis, total_chickDis)
-print(min_ch_dis)
+def get_dis(combinations):
+    # m의 조합에서 도시 치킨 거리 구하기
+    total = 0
+    for hx,hy in houses:
+        # 각 집의 치킨 거리
+        cd = float('inf')
+        for cx,cy in combinations:
+            cd = min(cd, abs(cx-hx) + abs(cy-hy))
+        total += cd
+    return total
+
+# idx = 치킨집 순회하는 포인터, comb는 치킨집 조합
+def dfs(idx,comb):
+    global ans
+    if m < len(comb):
+        return
+    # 치킨집을 모두 순회했을 때
+    if idx == len(chickens):
+        # 고른 치킨 집의 개수가 m개라면
+        if len(comb) == m:
+            # 도시의 치킨 거리 계산 후, ans와 비교
+            ans = min(ans, get_dis(comb))
+        return
+    # 치킨집 포함
+    dfs(idx+1, comb + [chickens[idx]])
+    # 치킨집 안 포함
+    dfs(idx+1, comb)
+dfs(0,[])
+print(ans)
