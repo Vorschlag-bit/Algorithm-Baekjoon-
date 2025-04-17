@@ -20,15 +20,10 @@ def solution(n, k):
     g = dec2n(n,k)
     primary = []
     p = ''
-    for idx, num in enumerate(str(g)):
-        if num == '0':
-            if len(p) > 0:
-                if judge(int(p)):
-                    primary.append(int(p))
-            p = ''
-        else:
-            p += num
-    if len(p) > 0:
-        if judge(int(p)):
-            primary.append(int(p))
+    
+    for num in str(g).split('0'):
+        if not num: continue
+        if judge(int(num)):
+            primary.append(num)
+        
     return len(primary)
