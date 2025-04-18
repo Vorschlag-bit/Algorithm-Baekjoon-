@@ -1,49 +1,35 @@
+from collections import defaultdict
 def solution(edges):
-    # 번호 노드가 향하는 노드들 dict = {1 : [1], 2: [3,1]}
-    out_node = dict()
-    in_node = dict()
-    # 모든 노드를 미리 등록
-    for e in edges:
-        out_node.setdefault(e[0], [])
-        out_node.setdefault(e[1], [])
-        in_node.setdefault(e[0], 0)
-        in_node.setdefault(e[1], 0)
-    
-    for e in edges:
-        start = e[0]
-        end = e[1]
-        out_node[start].append(end)
-        in_node[end] = in_node[end] + 1
-    # 중점 노드는 end가 자신인 건 없다.
+    # 도넛그래프 => 모든 노드가 out방향이 1개
+    # 막대그래프 => out 방향이 0개
+    # 8자그래프 => 중심 노드는 out 방향이 2개
+    in_node = defaultdict(list)
+    out_node = defaultdict(list)
     center = 0
-    for start in out_node.keys():
-        if in_node.get(start,0) == 0 and len(out_node[start]) >= 2:
-            center = start
-    # 막대 그래프 - 다음 노드 없으면 당첨
-    # 도넛 - 방문 노드에 있으면 당첨
-    # 8자 - out 노드 수가 2개 이상이면 당첨
-    def judge(start):
-        visit = set()
-        cur = start
-        while True:
-            visit.add(cur)
-            nextNodes = out_node[cur]
-            
-            # 8자
-            if len(nextNodes) > 1:
-                return 3
-            # 막대
-            if not nextNodes:
-                return 2
-            
-            cur = nextNodes[0]
-            # 도넛
-            if cur in visit:
-                return 1
-        
+    # 중심노드 => len(out_node) >= 2 and len(in_node) == 0
+    for i,o in edges:
+        in_node[o].append(i)
+        out_node[i].append(o)
+    
+    for k,v in out_node.items():
+        if len(v) >= 2 and len(in_node[k]) == 0:
+            center = k
+    # 중심, 도넛, 막대, 8자 순
     ans = [center,0,0,0]
-    for start in out_node[center]:
-        graph = judge(start)
-        ans[graph] += 1
-    print(ans)
+    
+    def judge(start_node):
+        nonlocal out_node
+        cur_node = start_node
+        while True:
+            next_node = out_node[cur_node]
+            
+            if len(next_node) > 1: return 3
+            elif len(next_node) == 0: return 2
+            
+            for node in next_node:
+                if start_node == node: return 1
+                cur_node = node
+    
+    for start_node in out_node[center]:
+        ans[judge(start_node)] += 1
     return ans
