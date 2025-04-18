@@ -1,29 +1,37 @@
-from itertools import combinations
+from itertools import combinations as comb
 def solution(places):
-    answer = []
-    
-    for r in places:
-        p = []
-        for x,i in enumerate(r):
-            for y,j in enumerate(i):
-                if r[x][y] == 'P':
-                    p.append((x,y))
-        check = True
-        for i in combinations(p, 2):
-            x1,y1 = i[0][0], i[0][1]
-            x2,y2 = i[1][0], i [1][1]
-            if abs(x1 - x2) + abs(y1 - y2) <= 2:
+    ans = []
+    for place in places:
+        person = []
+        arr = [[''] * 5 for _ in range(5)]
+        for i,r in enumerate(place):
+            for j,c in enumerate(r):
+                if c == 'P':
+                    person.append((i,j))
+                arr[i][j] = c
+        flag = True
+        for p1,p2 in comb(person, 2):
+            x1,y1 = p1[0],p1[1]
+            x2,y2 = p2[0],p2[1]
+            dis = abs(x1-x2) + abs(y1-y2)
+            if dis == 1:
+                flag = False
+                break
+            elif dis == 2:
                 if x1 == x2:
-                    if r[x1][(y1+y2)//2] != 'X':
-                        check = False
+                    if arr[x1][(y1+y2)//2] != 'X':
+                        flag = False
                         break
                 elif y1 == y2:
-                    if r[(x1+x2)//2][y1] != 'X':
-                        check = False
+                    if arr[(x1+x2)//2][y1] != 'X':
+                        flag = False
                         break
                 else:
-                    if r[x1][y2] != 'X' or r[x2][y1] != 'X':
-                        check = False
+                    if arr[x1][y2] != 'X' or arr[x2][y1] != 'X':
+                        flag = False
                         break
-        answer.append(1 if check else 0)
-    return answer
+                    
+            
+        ans.append(1) if flag else ans.append(0)
+    
+    return ans
