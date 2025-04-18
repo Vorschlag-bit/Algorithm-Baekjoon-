@@ -1,6 +1,5 @@
 from collections import defaultdict
 from itertools import combinations as comb
-from bisect import bisect_left
 def solution(info, query):
     ans = []
     db = defaultdict(list)
@@ -15,10 +14,7 @@ def solution(info, query):
                     temp[c] = '-'
                 condition = ''.join(temp)
                 db[condition].append(int(score))
-    
-    for key in db.keys():
-        db[key] = sorted(db[key])
-    
+        
     for q in query:
         q = q.replace("and ", '')
         condition = q.split()
@@ -26,7 +22,6 @@ def solution(info, query):
         condition = condition[:4]
         c = ''.join(condition)
         person = db[c]
-        idx = bisect_left(person,score)
-        ans.append(len(person) - idx)
+        ans.append(sum(1 for s in person if s >= score))
         
     return ans
