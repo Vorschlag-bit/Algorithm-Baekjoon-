@@ -6,7 +6,7 @@ while True:
         break
     l = sorted([a, b, c])
 
-    if l[0] <= 0 or l[2] >= l[0] + l[1]:
+    if l[2] >= l[0] + l[1]:
         print("Invalid")
         continue
 
