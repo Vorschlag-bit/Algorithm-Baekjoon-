@@ -1,29 +1,29 @@
 from collections import deque
 def solution(n, wires):
-    def bfs(cut):
-        visit = [False] * (n + 1)
-        arr = [[] for _ in range(n + 1)]
-        for i, (v1, v2) in enumerate(wires):
-            if cut == i: continue
-            arr[v1].append(v2)
-            arr[v2].append(v1)
-            
-        start = 1
-        cnt = 1
+    ans = len(wires)
+    
+    def bfs(c):
         q = deque()
-        q.append(start)
-        visit[start] = True
+        graph = [[] for _ in range(n+1)]
+        for idx,(n1,n2) in enumerate(wires):
+            if idx == c: continue
+            graph[n1].append(n2)
+            graph[n2].append(n1)
+        visit = [False] * (n+1)
+        visit[1] = True
+        q.append(1)
+        cnt = 1
         
         while q:
-            cur_node = q.popleft()
-            for nxt_node in arr[cur_node]:
-                if not visit[nxt_node]:
-                    visit[nxt_node] = True
-                    q.append(nxt_node)
+            cur = q.popleft()
+            for nxt in graph[cur]:
+                if not visit[nxt]:
                     cnt += 1
-        return abs(cnt - abs(n - cnt))
-    ans = 100
+                    visit[nxt] = True
+                    q.append(nxt)
+        return abs(cnt - abs(n-cnt))
+    
     for i in range(len(wires)):
-        diff = bfs(i)
-        ans = min(ans, diff)
+        d = bfs(i)
+        ans = min(ans,d)
     return ans
