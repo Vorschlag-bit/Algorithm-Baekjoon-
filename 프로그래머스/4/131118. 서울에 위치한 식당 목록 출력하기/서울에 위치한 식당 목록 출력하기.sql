@@ -1,0 +1,14 @@
+-- 서울에 위치한 식당들의 ID, 식당 이름, 음식 종류, 즐찾 수, 주소, 리뷰 평균 점수(소수점 세자리에서 반올림), 평균 점수 기준 내림차순, 즐찾 수 내림차순
+SELECT
+I.REST_ID,
+I.REST_NAME,
+I.FOOD_TYPE,
+I.FAVORITES AS F,
+I.ADDRESS,
+ROUND(AVG(R.REVIEW_SCORE),2) AS S
+FROM REST_INFO I
+JOIN REST_REVIEW R
+ON I.REST_ID = R.REST_ID
+WHERE I.ADDRESS LIKE '서울%'
+GROUP BY I.REST_ID
+ORDER BY S DESC, F DESC
