@@ -9,7 +9,7 @@ def solution(p, m):
             m[i] = 1
         else: m[i] = 2
     # 곡괭이를 사용하는 순서가 중요함 => 순열
-    # 광물 인덱스, 현재 곡괭이, 사용한 곡괭이 리스트, 피로도
+    # 광물 인덱스, 피로도
     def dfs(idx,hp):
         nonlocal ans,p,m
         # 기존 최소 이상이면 return
@@ -37,7 +37,6 @@ def solution(p, m):
                         if m[j] == 0: consume += 25
                         elif m[j] == 1: consume += 5
                         else: consume += 1
-                else: break
             dfs(idx+5,hp + consume)
             p[i] += 1
     dfs(0,0)
