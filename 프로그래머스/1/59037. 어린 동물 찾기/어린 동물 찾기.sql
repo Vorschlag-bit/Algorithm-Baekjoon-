@@ -1,0 +1,6 @@
+-- 젊은 동물의 아이디와 이름 조회, 아이디 순
+SELECT
+ANIMAL_ID,
+NAME
+FROM ANIMAL_INS
+WHERE INTAKE_CONDITION != 'Aged'
