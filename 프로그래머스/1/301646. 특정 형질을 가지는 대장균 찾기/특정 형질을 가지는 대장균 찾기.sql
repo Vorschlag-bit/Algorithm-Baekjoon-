@@ -1,0 +1,5 @@
+# 2번 형질을 보유하지 않으며 1,3번을 보유하는 개체 수
+SELECT
+COUNT(*) AS 'COUNT'
+FROM ECOLI_DATA
+WHERE NOT (GENOTYPE & 2) AND (GENOTYPE & 5)
