@@ -1,0 +1,4 @@
+-- 가장 큰 물고기의 길이를 'cm'을 붙여 출력(MAX_LENGTH) -> CONCAT
+SELECT
+CONCAT(MAX(LENGTH),'cm') AS MAX_LENGTH
+FROM FISH_INFO
