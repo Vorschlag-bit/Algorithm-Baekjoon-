@@ -1,0 +1,4 @@
+-- 가장 최근 들어온 동물은 언제?
+SELECT
+MAX(DATETIME) AS TIME
+FROM ANIMAL_INS
