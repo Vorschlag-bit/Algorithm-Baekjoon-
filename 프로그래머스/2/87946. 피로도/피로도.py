@@ -1,17 +1,15 @@
-from collections import deque
-def solution(k, d):
-    ans = 0
-    q = deque()
-    n = len(d)
-    visit = [False] * n
-    q.append((k, 0, visit))
-    while q:
-        st, cnt, visit = q.popleft()
-        if cnt > ans:
-            ans = cnt
-        for i in range(n):
-            if not visit[i] and st >= d[i][0]:
-                eachv = visit[:]
-                eachv[i] = True
-                q.append((st - d[i][1], cnt + 1, eachv))
+from itertools import permutations as perm
+def solution(k, dun):
+    ans = -1
+    arr = [i for i in range(len(dun))]
+    for p in perm(arr,len(dun)):
+        # 방문 순서
+        cnt = 0
+        hp = k
+        for idx in p:
+            if dun[idx][0] <= hp:
+                hp -= dun[idx][1]
+                cnt += 1
+            else: break
+        ans = max(cnt,ans)
     return ans
