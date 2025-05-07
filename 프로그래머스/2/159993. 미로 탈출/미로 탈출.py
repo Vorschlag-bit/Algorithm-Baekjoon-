@@ -4,7 +4,6 @@ def solution(arr):
     ans = 0
     lx,ly = 0,0
     sx,sy = 0,0
-    ex,ey = 0,0
     n = len(arr)
     m = len(arr[0])
     for i in range(n):
@@ -13,8 +12,6 @@ def solution(arr):
                 lx,ly = i,j
             if arr[i][j] == 'S':
                 sx,sy = i,j
-            if arr[i][j] == 'E':
-                ex,ey = i,j
     def bfs(x,y,t):
         target = 'L' if t == 0 else 'E'
         q = deque()
