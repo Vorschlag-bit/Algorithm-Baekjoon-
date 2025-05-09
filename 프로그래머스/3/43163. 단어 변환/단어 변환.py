@@ -1,19 +1,17 @@
 from collections import deque
-def solution(b, t, words):
-    ans = 0
+def check(s1,s2):
+    return sum(chr1 != chr2 for chr1,chr2 in zip(s1,s2))
+def solution(begin, target, words):
+    d = {begin:0}
     q = deque()
-    def check_d(str1, str2):
-        return sum(c1 != c2 for c1, c2 in zip(str1, str2))
+    q.append(begin)
     n = len(words)
-    
-    q.append(b)
-    dic = {b: 0}
     while q:
-        cur = q.popleft()
-        if cur == t:
+        c = q.popleft()
+        if c == target:
             break
         for i in range(n):
-            if words[i] not in dic and check_d(words[i], cur) == 1:
-                dic[words[i]] = dic[cur] + 1
+            if d.get(words[i],0) == 0 and check(c,words[i]) == 1:
+                d[words[i]] = d[c] + 1
                 q.append(words[i])
-    return dic.get(t , 0)
+    return d.get(target,0)
