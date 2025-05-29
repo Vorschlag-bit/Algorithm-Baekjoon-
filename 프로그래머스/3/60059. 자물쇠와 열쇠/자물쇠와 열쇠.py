@@ -1,4 +1,3 @@
-from collections import deque
 def solution(key, lock):
     n = len(lock)
     m = len(key)
