@@ -7,11 +7,11 @@ class Solution {
         for (chr in ing) {
             stack.add(chr)
             if (stack.size >= 4 &&
-                stack[stack.size - 4] == '1' &&
-                stack[stack.size - 3] == '2' &&
-                stack[stack.size - 2] == '3' &&
-                stack[stack.size - 1] == '1') {
-                repeat(4) { stack.removeAt(stack.size-1) }
+                stack[stack.lastIndex - 3] == '1' &&
+                stack[stack.lastIndex - 2] == '2' &&
+                stack[stack.lastIndex - 1] == '3' &&
+                stack[stack.lastIndex] == '1') {
+                repeat(4) { stack.removeAt(stack.lastIndex) }
                 ans++
             }
         }
