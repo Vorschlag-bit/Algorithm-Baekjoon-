@@ -1,10 +1,10 @@
 # [level 2] 롤케이크 자르기 - 132265 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/132265) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/132265?language=kotlin) 
 
 ### 성능 요약
 
-메모리: 49.5 MB, 시간: 693.80 ms
+메모리: 152 MB, 시간: 293.70 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2025년 05월 07일 15:37:23
+2025년 06월 02일 17:03:36
 
 ### 문제 설명
 
