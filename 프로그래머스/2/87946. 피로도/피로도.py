@@ -1,15 +1,15 @@
 from itertools import permutations as perm
-def solution(k, dun):
+def solution(k, dungeons):
     ans = -1
-    arr = [i for i in range(len(dun))]
-    for p in perm(arr,len(dun)):
-        # 방문 순서
-        cnt = 0
+    n = len(dungeons)
+    arr = [i for i in range(n)]
+    for p in perm(arr,n):
         hp = k
+        cnt = 0
         for idx in p:
-            if dun[idx][0] <= hp:
-                hp -= dun[idx][1]
-                cnt += 1
-            else: break
-        ans = max(cnt,ans)
+            d = dungeons[idx]
+            if hp < d[0]: break
+            hp -= d[1]
+            cnt += 1
+        ans = max(ans,cnt)
     return ans
