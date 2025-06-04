@@ -1,29 +1,21 @@
 import math
-def dec2n(num,base):
+def dec2k(n,base):
     s = ''
-    while num > 0:
-        d = num % base
-        s = str(d) + s
-        num //= base
-    return int(s)
+    while n > 0:
+        num = n % base
+        s = str(num) + s
+        n //= base
+    return s
 
-def judge(num):
-    if num == 1:
-        return False
-    for i in range(2,int(math.sqrt(num)+1)):
-        if num % i == 0:
-            return False
+def check(n):
+    if n == 1: return False
+    for i in range(2,int(math.sqrt(n))+1):
+        if n % i == 0: return False
     return True
-
 def solution(n, k):
-    answer = 0
-    g = dec2n(n,k)
-    primary = []
-    p = ''
-    
-    for num in str(g).split('0'):
-        if not num: continue
-        if judge(int(num)):
-            primary.append(num)
-        
-    return len(primary)
+    p = []
+    base = dec2k(n,k)
+    for s in base.split('0'):
+        if not s: continue
+        if check(int(s)): p.append(s)
+    return len(p)
