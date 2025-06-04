@@ -1,13 +1,10 @@
 def solution(elements):
     n = len(elements)
-    elements += elements
     ans = set()
-    dp = [[0]*(2*n) for _ in range(n+1)]
-    for i in range(2*n):
-        dp[1][i] = elements[i]
-        ans.add(dp[1][i])
-    for l in range(2,n+1):
-        for i in range(2*n-l):
-            dp[l][i] = dp[l-1][i] + dp[l-1][i+1] - dp[l-2][i+1]
-            ans.add(dp[l][i])
+    for l in range(n):
+        e = elements[l]
+        ans.add(e)
+        for i in range(l+1,l+n):
+            e += elements[i%n]
+            ans.add(e)
     return len(ans)
