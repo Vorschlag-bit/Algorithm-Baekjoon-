@@ -1,29 +1,30 @@
-from collections import deque
+from collections import defaultdict,deque
 def solution(n, wires):
-    ans = len(wires)
-    
-    def bfs(c):
+    ans = float('inf')
+    graph = defaultdict(list)
+    for v1,v2 in wires:
+        graph[v1].append(v2)
+        graph[v2].append(v1)
+    def bfs(s):
+        nonlocal ans
         q = deque()
-        graph = [[] for _ in range(n+1)]
-        for idx,(n1,n2) in enumerate(wires):
-            if idx == c: continue
-            graph[n1].append(n2)
-            graph[n2].append(n1)
-        visit = [False] * (n+1)
-        visit[1] = True
-        q.append(1)
+        visit = [False]*(n+1)
+        visit[s] = True
         cnt = 1
-        
+        q.append(s)
         while q:
-            cur = q.popleft()
-            for nxt in graph[cur]:
+            node = q.popleft()
+            for nxt in graph[node]:
                 if not visit[nxt]:
-                    cnt += 1
                     visit[nxt] = True
                     q.append(nxt)
-        return abs(cnt - abs(n-cnt))
-    
-    for i in range(len(wires)):
-        d = bfs(i)
-        ans = min(ans,d)
+                    cnt += 1
+        a = abs(abs(n - cnt)-cnt)
+        ans = min(ans,a)
+    for v1,v2 in wires:
+        graph[v1].remove(v2)
+        graph[v2].remove(v1)
+        bfs(1)
+        graph[v1].append(v2)
+        graph[v2].append(v1)
     return ans
