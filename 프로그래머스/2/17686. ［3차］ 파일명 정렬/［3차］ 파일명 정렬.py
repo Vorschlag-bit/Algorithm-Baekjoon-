@@ -1,30 +1,24 @@
-def solution(f):
-    # head는 대소문자를 구분않는 사전 순
-    # head가 똑같을 경우, num 오름차순(0무시)
-    # num까지 같다면 그냥 들어온 순서대로
+def solution(files):
     ans = []
-    fs = []
-    for file in f:
-        lowfile = file.lower()
+    d = []
+    for idx,file in enumerate(files):
+        # lower로 head 소문자화
+        low = file.lower()
+        num_s, num_e = 0,0
         head = ''
-        for i in lowfile:
-            if i.isdigit():
+        for i,char in enumerate(low):
+            if char.isdigit():
+                num_s = i
                 break
-            head += i
-        ns = 0
-        for i in file:
-            if i.isdigit():
-                ns = file.index(i)
-                break
-        l = 0
-        for i in range(ns, len(file)):
-            if not file[i].isdigit():
-                break
-            l += 1
-        num = int(file[ns:ns+l])
-        print(num)
-        fs.append((head,num,file))
-    fs = sorted(fs, key=lambda x: (x[0],x[1]))
-    for f in fs:
-        ans.append(f[2]) 
+            head += char
+        for i in range(num_s,len(low)):
+            if low[i].isdigit():
+                num_e = i
+            else: break
+        num = int(low[num_s:num_e+1])
+        # head, num ,idx
+        d.append((head,num,idx))
+    d.sort(key=lambda x: (x[0],x[1]))
+    for h,n,idx in d:
+        ans.append(files[idx])
     return ans
