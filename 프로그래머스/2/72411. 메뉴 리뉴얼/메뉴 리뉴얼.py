@@ -1,11 +1,15 @@
-from collections import Counter
 from itertools import combinations as comb
+from collections import Counter
 def solution(orders, course):
-    ans = []
-    for r in course:
-        org = []
+    answer = []
+    for k in course:
+        comp = []
         for order in orders:
-            org += [c for c in comb(sorted(order),r)]
-        cnt = Counter(org).most_common()
-        ans += [''.join(k) for k,v in cnt if v > 1 and cnt[0][1] == v]
-    return sorted(ans)
+            order = sorted(order)
+            for c in comb(order,k):
+                comp.append(c)
+        cnt = Counter(comp).most_common()
+        for k,v in cnt:
+            if v == cnt[0][1] and v > 1:
+                answer.append(''.join(k))
+    return sorted(answer)
