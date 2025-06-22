@@ -1,10 +1,10 @@
 # [level 1] 정수 제곱근 판별 - 12934 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12934?language=java) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12934?language=kotlin) 
 
 ### 성능 요약
 
-메모리: 87.8 MB, 시간: 0.10 ms
+메모리: 64.7 MB, 시간: 0.10 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2025년 06월 22일 20:47:23
+2025년 06월 22일 20:52:13
 
 ### 문제 설명
 
