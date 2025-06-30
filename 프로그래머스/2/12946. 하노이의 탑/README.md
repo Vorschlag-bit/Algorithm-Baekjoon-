@@ -1,10 +1,10 @@
 # [level 2] 하노이의 탑 - 12946 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12946) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12946?language=kotlin) 
 
 ### 성능 요약
 
-메모리: 17.8 MB, 시간: 18.34 ms
+메모리: 81.5 MB, 시간: 1.87 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2025년 06월 30일 11:09:44
+2025년 06월 30일 11:15:40
 
 ### 문제 설명
 
