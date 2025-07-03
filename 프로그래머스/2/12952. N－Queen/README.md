@@ -1,10 +1,10 @@
 # [level 2] N-Queen - 12952 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12952) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12952?language=kotlin) 
 
 ### 성능 요약
 
-메모리: 9.18 MB, 시간: 2021.89 ms
+메모리: 125 MB, 시간: 353.00 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2025년 07월 03일 11:20:11
+2025년 07월 03일 11:31:08
 
 ### 문제 설명
 
