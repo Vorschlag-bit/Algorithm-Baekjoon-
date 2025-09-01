@@ -8,7 +8,7 @@ for _ in range(n):
     cmd.append((t,x,y))
 ans = 0
 
-def drop_green(t,x,y):
+def move_green(t,x,y):
     r = x
     if t == 1:
         while r + 1 < 10 and arr[r+1][y] == 0:
@@ -20,27 +20,27 @@ def drop_green(t,x,y):
         arr[r][y] = 1
         arr[r][y+1] = 1
     else:
-        while r + 1 < 10 and arr[r+1][y] == 0 and arr[r][y] == 0:
+        while r + 1 < 10 and arr[r+1][y] == 0:
             r += 1
         arr[r][y] = 1
         arr[r-1][y] = 1
 
-def drop_blue(t,x,y):
+def move_blue(t,x,y):
+    c = y
     if t == 1:
-        c = y
-        while c+1 < 10 and arr[x][c+1] == 0:
+        while c + 1 < 10 and arr[x][c+1] == 0:
             c += 1
         arr[x][c] = 1
-    elif t == 2:  # 1×2 가로 → 2×1 세로로 회전
-        c = y
-        while c+1 < 10 and arr[x][c+1] == 0:
+    elif t == 2:
+        while c + 1 < 10 and arr[x][c+1] == 0:
             c += 1
-        arr[x][c] = arr[x][c-1] = 1
-    else:  # t == 3, 2×1 세로 → 1×2 가로로 회전
-        c = y
-        while c+1 < 10 and arr[x][c+1] == 0 and arr[x+1][c+1] == 0:
+        arr[x][c] = 1
+        arr[x][c-1] = 1
+    else:
+        while c + 1 < 10 and arr[x+1][c+1] == 0 and arr[x][c+1] == 0:
             c += 1
-        arr[x][c] = arr[x+1][c] = 1
+        arr[x][c] = 1
+        arr[x+1][c] = 1
 
 def combo_green():
     global ans
@@ -48,21 +48,17 @@ def combo_green():
         if sum(arr[i][:4]) == 4:
             ans += 1
             for j in range(4): arr[i][j] = 0
-            # 중력이 아니라 해당 0에서 i까지 한 칸씩만 내려오면 된다.
             for row in range(i-1,-1,-1):
                 for j in range(4):
                     arr[row+1][j] = arr[row][j]
                     arr[row][j] = 0
-    
-    return
 
 def combo_blue():
     global ans
     for j in range(6,10):
         cnt = 0
         for i in range(4):
-            if arr[i][j] == 1: 
-                cnt += 1
+            if arr[i][j] == 1: cnt += 1
         if cnt == 4:
             ans += 1
             for i in range(4): arr[i][j] = 0
@@ -70,80 +66,63 @@ def combo_blue():
                 for i in range(4):
                     arr[i][col+1] = arr[i][col]
                     arr[i][col] = 0
-                
-    return
 
 def light_green():
-    # 4,5행에서 넘어선 칸 있는지 확인
-    cnt = []
-    for i in [4,5]:
-        if sum(arr[i][:4]) > 0: 
-            cnt.append(i)
-    if len(cnt) == 0: 
-        return
-    
-    # 아래로 슬라이딩
+    # row 4,5
+    l = []
+    for r in [4,5]:
+        if sum(arr[r][:4]) > 0: l.append(r)
+    if len(l) == 0: return
+
     for i in range(9,-1,-1):
-        nx = i + len(cnt)
-        if nx < 10:
+        nxt = i + len(l)
+        if nxt < 10:
             for j in range(4):
-                arr[nx][j] = arr[i][j]
-                arr[i][j] = 0
+                arr[nxt][j] = arr[i][j]
     
-    # 연한 칸 지우기
-    for i in cnt:
-        for j in range(4): 
-            arr[i][j] = 0
+    for r in l:
+        for j in range(4):
+            arr[r][j] = 0
 
 def light_blue():
-    # 4,5열에서 넘어선 칸 있는지 확인
-    cnt = []
-    for j in [4,5]:
-        s = 0
+    # col 4,5
+    l = []
+    for c in [4,5]:
+        cnt = 0
         for i in range(4):
-            if arr[i][j] == 1: 
-                s += 1
-        if s > 0: 
-            cnt.append(j)
+            if arr[i][c] > 0: cnt += 1
+        if cnt > 0: l.append(c)
     
-    if len(cnt) == 0: 
-        return
-    
-    # 오른쪽으로 슬라이딩
-    for j in range(9,-1,-1):
-        ny = j + len(cnt)
-        if ny < 10:
-            for i in range(4):
-                arr[i][ny] = arr[i][j]
-                arr[i][j] = 0
-    
-    # 연한 칸 지우기
-    for j in cnt:
-        for i in range(4): 
-            arr[i][j] = 0
+    if len(l) == 0: return
 
-for t,x,y in cmd:
-    drop_green(t,x,y)
-    drop_blue(t,x,y)
+    for j in range(9,-1,-1):
+        nxt = j + len(l)
+        if nxt < 10:
+            for i in range(4):
+                arr[i][nxt] = arr[i][j]
     
+    for c in l:
+        for i in range(4):
+            arr[i][c] = 0
+    
+for com in cmd:
+    t,x,y = com
+    move_green(t,x,y)
+    move_blue(t,x,y)
+
     combo_green()
     combo_blue()
 
-    
-    # 3. 연한 구역 처리
     light_green()
     light_blue()
 
-# 결과 계산
-total = 0
+count = 0
 for i in range(6,10):
     for j in range(4):
-        if arr[i][j] == 1: 
-            total += 1
+        if arr[i][j] == 1: count += 1
+
 for j in range(6,10):
     for i in range(4):
-        if arr[i][j] == 1: 
-            total += 1
-
+        if arr[i][j] == 1: count += 1
 print(ans)
-print(total)
+print(count)
