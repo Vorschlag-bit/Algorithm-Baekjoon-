@@ -14,18 +14,16 @@ def check(x,y):
 
 def rotate_90(sx,sy,length):
     global arr
-    new_arr = [[0] * l for _ in range(l)]
-    for x in range(sx,sx+length):
-        for y in range(sy,sy+length):
-            # 1. (0,0)으로 상대 좌표 옮기기
-            ox,oy = x - sx, y - sy
-            # 2. 90도 회전 시, 좌표
-            rx,ry = oy, length - ox - 1
-            new_arr[sx+rx][sy+ry] = arr[x][y]
+    new_arr = [[0] * length for _ in range(length)]
+    for i in range(length):
+        for j in range(length):
+            new_x = j
+            new_y = length - 1 -i
+            new_arr[new_x][new_y] = arr[i+sx][j+sy]
     # 3. 다시 arr에 옮기기
-    for x in range(sx,sx+length):
-        for y in range(sy,sy+length):
-            arr[x][y] = new_arr[x][y]
+    for x in range(length):
+        for y in range(length):
+            arr[sx+x][sy+y] = new_arr[x][y]
 
 def get_melt(arr):
     result = []
