@@ -1,128 +1,121 @@
 from sys import stdin as input
-from collections import deque, defaultdict
-
-# 4 * 4 크기, m마리
-directions = [(0,-1),(-1,-1),(-1,0),(-1,1),(0,1),(1,1),(1,0),(1,-1)]
-sharkd = [(-1,0),(0,-1),(1,0),(0,1)]
-
-m, s = map(int, input.readline().split())
+from collections import deque,defaultdict
+m,s = map(int,input.readline().split())
 fish = defaultdict(list)
-
+# 물고기 이동
+directions = [(0,-1),(-1,-1),(-1,0),(-1,1),(0,1),(1,1),(1,0),(1,-1)]
+# 상어 이동
+sd = [(-1,0),(0,-1),(1,0),(0,1)]
 for _ in range(m):
-    x, y, d = map(int, input.readline().split())
-    fish[(x-1, y-1)].append(d-1)
-
-sx, sy = map(int, input.readline().split())
+    x,y,d = map(int,input.readline().split())
+    x -= 1
+    y -= 1
+    d -= 1
+    key = (x,y)
+    fish[key].append(d)
+smell = [[0] * 4 for _ in range(4)]
+sx,sy = map(int,input.readline().split())
 sx -= 1
 sy -= 1
+path = []
+# 4*4*4
+for i in range(4):
+    for j in range(4):
+        for k in range(4):
+            path.append((i,j,k))
 
-smell = [[0] * 4 for _ in range(4)]
+def check(x,y): return 0 <= x < 4 and 0 <= y < 4
 
-def check(x, y):
-    return 0 <= x < 4 and 0 <= y < 4
-
-def move_fish(x, y, d, new_fish):
+def fish_move(key,idx,new_fish):
+    global smell,sx,sy
+    cx,cy = key
     for i in range(8):
-        nd = (d - i) % 8
-        nx, ny = x + directions[nd][0], y + directions[nd][1]
-        if not check(nx, ny):
-            continue
-        if (nx, ny) == (sx, sy):
-            continue
-        if smell[nx][ny] > 0:
-            continue
-        new_fish[(nx, ny)].append(nd)
+        d = (idx-i) % 8
+        nx,ny = cx + directions[d][0], cy + directions[d][1]
+        if not check(nx,ny): continue
+        if smell[nx][ny] > 0: continue
+        if nx == sx and ny == sy: continue
+        new_fish[(nx,ny)].append(d)
         return
-    new_fish[(x, y)].append(d)
+    new_fish[(cx,cy)].append(idx)
+    return
 
-def get_shark_moves():
-    moves = []
-    # 3칸 연속 이동의 모든 경우의 수 생성 (4^3 = 64가지)
-    for i in range(4):
-        for j in range(4):
-            for k in range(4):
-                moves.append([i, j, k])
-    return moves
+def shark_move(new_fish,turn):
+    global path,smell,sx,sy
+    # 가장 많이 먹는 물고기
+    cnt = 0
+    # 사전순 앞서는 거
+    best = 10000
+    moves = None
+    bx,by = sx,sy
 
-def simulate_shark_move(moves, new_fish):
-    best_count = -1
-    best_moves = 1000
-    best_path = []
-    
-    for idx,move_seq in enumerate(moves):
-        cx, cy = sx, sy
-        path = [(cx, cy)]
-        valid = True
-        
-        # 3칸 연속 이동이 가능한지 확인
-        for move_dir in move_seq:
-            nx, ny = cx + sharkd[move_dir][0], cy + sharkd[move_dir][1]
-            if not check(nx, ny):
-                valid = False
+    for idx,p in enumerate(path):
+        flag = True
+        cx,cy = sx,sy
+        # 잡아먹은 물고기
+        eat = 0
+        # 물고기가 있었던 칸(중복 방지를 위해 set)
+        visit = set()
+        for i in p:
+            cx,cy = cx + sd[i][0], cy + sd[i][1]
+            if not check(cx,cy):
+                flag = False
                 break
-            cx, cy = nx, ny
-            path.append((cx, cy))
-        
-        if not valid:
-            continue
-        
-        # 이 경로로 이동했을 때 먹을 수 있는 물고기 수 계산
-        eaten_positions = set()
-        count = 0
-        for pos in path[1:]:  # 시작 위치 제외
-            if pos not in eaten_positions and pos in new_fish:
-                count += len(new_fish[pos])
-                eaten_positions.add(pos)
-        
-        # 더 많은 물고기를 먹거나, 같은 수면 사전순으로 앞선 경우
-        if count > best_count or (count == best_count and idx < best_moves):
-            best_count = count
-            best_moves = idx
-            best_path = path[1:]  # 시작 위치 제외
-    
-    return best_path
+            # 물고기가 존재한다면 
+            f = len(new_fish[(cx,cy)])
+            if f > 0 and (cx,cy) not in visit:
+                eat += f
+                visit.add((cx,cy))
+            
+        # 유효하지 움직이 존재하면 pass
+        if not flag: continue
 
-for turn in range(1, s + 1):
-    # 1. 물고기 복제
-    clone = defaultdict(list)
-    for pos, fish_list in fish.items():
-        clone[pos] = fish_list[:]
+        # 최대로 먹고 최소 사전 순인지 확인
+        if eat > cnt or (eat == cnt and idx < best):
+            cnt = eat
+            best = idx
+            moves = visit
+            bx,by = cx,cy
     
-    # 2. 물고기 이동
+    # 물고기 냄새 남기기 & 물고기 제거 & 상어 움직임 반영
+    if moves != None:
+        sx,sy = bx,by
+        # print(f"최고의 움직임: {path[best]}")
+        # print(f"잡아 먹은 물고기 수: {cnt}")
+        # print(f"물고기 위치: {moves}")
+        for x,y in moves:
+            smell[x][y] = turn
+            del new_fish[(x,y)]
+
+turn = 1
+for _ in range(s):
+    # 모든 물고기 복제(깊은 복사)
+    copy = defaultdict(list)
+    for k in fish.keys():
+        if fish[k]:
+            for d in fish[k]:
+                copy[k].append(d)
+    # 모든 물고기 한 칸 이동
+    # 상어가 있거나, 냄새나거나, 격자 벗어나면 x
     new_fish = defaultdict(list)
-    for pos, fish_list in fish.items():
-        for d in fish_list:
-            move_fish(pos[0], pos[1], d, new_fish)
-    
-    # 3. 상어 이동
-    moves = get_shark_moves()
-    shark_path = simulate_shark_move(moves, new_fish)
-    
-    if shark_path:
-        # 상어가 지나간 칸의 물고기 제거 및 냄새 남기기
-        eaten_positions = set()
-        for pos in shark_path:
-            if pos in new_fish and len(new_fish[pos]) > 0:
-                if pos not in eaten_positions:
-                    smell[pos[0]][pos[1]] = turn
-                    eaten_positions.add(pos)
-                new_fish[pos] = []  # 물고기 제거
-        
-        # 상어 위치 업데이트
-        sx, sy = shark_path[-1]
-    
-    # 4. 2번 전 냄새 제거
+    for k in fish.keys():
+        if fish[k]:
+            for d in fish[k]:
+                fish_move(k,d,new_fish)
+    # 상어 이동, 물고기 제거 및 냄새 남기기
+    shark_move(new_fish,turn)
+    # 2턴 전 냄새 제거
     for i in range(4):
         for j in range(4):
             if smell[i][j] == turn - 2:
                 smell[i][j] = 0
-    
-    # 5. 물고기 복제 완료
-    for pos, fish_list in clone.items():
-        new_fish[pos].extend(fish_list)
-    
+    # 복제 반영
+    for k,v in copy.items():
+        new_fish[k].extend(v)
     fish = new_fish
+    turn += 1
 
-# 결과 출력
-ans = sum(len(fish_list) for fish_list in fish.values())
+ans = 0
+for v in fish.values():
+    ans += len(v)
 print(ans)
