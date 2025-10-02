@@ -1,28 +1,28 @@
+from collections import defaultdict
 def solution(info, edges):
-    ans = 0
-    graph = [[] for _ in range(len(info))]
-    for parent,child in edges:
-        graph[parent].append(child)
+    ans = 1
+    # 모은 양 수보다 늑대 수가 같거나 많으면 모든 양 잡아먹힘
+    # 잡아먹히지 않으면서 최대의 양을 모아 다시 루트 노드로 복귀
+    # 루트 노드는 항상 양(0 = 양, 1 = 늑대)
+    graph = defaultdict(list)
+    for a,b in edges:
+        graph[a].append(b)
     
-    def dfs(idx, wolf, sheep, visitable):
-        nonlocal ans,graph
-        visitable.remove(idx)
+    def dfs(no, able, wolf, sheep):
+        nonlocal ans
+        ans = max(ans, sheep)
         
-        if info[idx] == 0:
-            sheep += 1
-        else:
-            wolf += 1
-        ans = max(ans,sheep)
+        # 새로운 able 생성
+        new_able = able.copy()
+        for nxt in graph[no]:
+            new_able.add(nxt)
         
-        for child in graph[idx]:
-            visitable.append(child)
-        
-        for child in visitable:
-            if info[child] == 0:
-                dfs(child,wolf,sheep,visitable[:])
+        for nxt in new_able:
+            if info[nxt] == 1:
+                if wolf + 1 >= sheep: 
+                    continue
+                dfs(nxt, new_able - {nxt}, wolf+1, sheep)
             else:
-                if sheep > wolf + 1:
-                    dfs(child,wolf,sheep,visitable[:])
-        
-    dfs(0,0,0,[0])
+                dfs(nxt, new_able - {nxt}, wolf, sheep+1)
+    dfs(0,set(),0,1)
     return ans
