@@ -1,37 +1,46 @@
 import heapq
+from collections import defaultdict
 def solution(n, paths, gates, summits):
-    graph = [[] for _ in range(n+1)]
-    for i,j,w in paths:
-        graph[i].append([j,w])
-        graph[j].append([i,w])
-        
-    summit = [False] * (n+1)
-    for s in summits:
-        summit[s] = True
+    # 봉우리 번호, 최소 inten
+    ans = [0,float('inf')]
+    # 1-n 번호(출입구,쉼터,봉우리)
+    # 그래프(가중치 존재) -> heap
+    # 등간 코스 중 inten이 최소가 되는 등산코스
+    q = []
+    gate = set(gates)
+    summit = set(summits)
+    graph = defaultdict(list)
+    for a,b,w in paths:
+        graph[a].append((b,w))
+        graph[b].append((a,w))
+    # q에 넣을 요소
+    # h,cur,visit
+    for g in gate:
+        heapq.heappush(q,(0,g))
     
+    # 해당 노드 최소 inten
     dis = [float('inf')] * (n+1)
-    pq = []
-    # 각 정점을 도달할 수 있는 최소 intensity를 저장할 dis
-    for g in gates:
-        dis[g] = 0
-        heapq.heappush(pq, [0,g])
     
-    while pq:
-        d, node = heapq.heappop(pq)
+    while q:
+        # 현재까지 최대 inten
+        h,cur = heapq.heappop(q)
+        if dis[cur] < h: continue
+        # cur = 도착지라면 정답과 비교
+        if cur in summit:
+            if (ans[1] > h or
+                (ans[1] == h and ans[0] > cur)):
+                ans[1] = h
+                ans[0] = cur
+            continue
         
-        if dis[node] < d or summit[node]: continue
-        
-        for nxt_node,step in graph[node]:
-            # w와 현재 노드의 기존 intensity 비교(언제나 dis에는 intensity만 저장)
-            step = max(step, dis[node])
-            if step < dis[nxt_node]:
-                dis[nxt_node] = step
-                heapq.heappush(pq, [step,nxt_node])
-            
-            
-    answer = [0,float('inf')]
-    for s in sorted(summits):
-        if dis[s] < answer[1]:
-            answer[0] = s
-            answer[1] = dis[s]
-    return answer
+        for nxt,w in graph[cur]:
+            # 최대 갱신
+            til_max = max(w,h)
+            # 최대 inten이 아닌 경우 무시
+            if dis[nxt] <= til_max: continue
+            # 다음 곳이 gate여도 무시
+            if nxt in gate: continue
+            # 방문 안 한 곳
+            dis[nxt] = til_max
+            heapq.heappush(q,(til_max,nxt))
+    return ans
