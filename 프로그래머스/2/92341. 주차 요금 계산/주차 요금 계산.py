@@ -1,48 +1,58 @@
-import math
+def s2t(s):
+    sp = s.split(":")
+    return int(sp[0]) * 60 + int(sp[1])
+
 def solution(fees, records):
-    minT,minF,perT,perF = fees[0], fees[1], fees[2], fees[3]
-    cars = set()
-    for rec in records:
-        arr = rec.split()
-        cars.add(arr[1])
-    cars = sorted(cars)
-    fee = dict()
-    # 전체 주차시간
+    ans = []
+    # 누적 주차 시간을 구해야 함
     total = dict()
-    # 들어오는 시간
+    # 입차 관리(k - 차량 번호, v - 입차 시간)
     In = dict()
-    # 모든 차 총 주차시간 초기화
-    for c in cars:
-        total[c] = 0
-    def minutes(time):
-        t = time.split(":")
-        return int(t[0]) * 60 + int(t[1])
-    answer = []
-    for rec in records:
-        arr = rec.split()
-        t,cn,command = arr[0],arr[1],arr[2]
-        
-        if command == "IN":
-            In[cn] = minutes(t)
+    # 출차 관리
+    Out = dict()
+    for record in records:
+        rec = record.split(" ")
+        time = s2t(rec[0])
+        num = rec[1]
+        # In or Out
+        r = rec[2]
+        # in
+        if r == 'IN':
+            In[num] = time
+        # out
         else:
-            intime = In[cn]
-            parked = minutes(t) - intime
-            total[cn] += parked
-            In.pop(cn)
-    # 들어오고 안 나간 놈들
-    for cn,intime in In.items():
-        total_time = (23*60+59) - intime
-        total[cn] += total_time
-    # 요금 청산
-    for cn,totalT in total.items():
-        # 기본 시간보다 같거나 작다면 기본요금
-        if totalT <= minT:
-            fee[cn] = minF
-        else:
-            totalT -= minT
-            f = minF + math.ceil(totalT / perT) * perF
-            fee[cn] = f
-    for c in cars:
-        answer.append(fee[c])
-    print(answer)
-    return answer
+            Out[num] = time
+            in_t = In[num]
+            total[num] = total.get(num,0) + (time-in_t)
+            In[num] = -1
+    
+    max_t = s2t("23:59")
+    # 입차 기반으로 번호 카운팅
+    for num,in_t in In.items():
+        if in_t != -1:
+            # 출차 시간은 없을 경우 "23:59"
+            total[num] = total.get(num,0) + (max_t-in_t)
+    # 차량 번호로 정렬하기 위해 임시 저장(번호,요금)
+    temp = []
+    for num,t in total.items():
+        price = fees[1]
+        if t > fees[0]:
+            over = t - fees[0]
+            # 단위 시간으로 나눠 떨어질 경우 그대로
+            if over % fees[2] == 0:
+                r = over // fees[2]
+                price += r * fees[3]
+            # 안 나눠떨어지면 + 1
+            else:
+                r = (over // fees[2]) + 1
+                price += r * fees[3]
+        temp.append((int(num),price))
+    temp.sort(key=lambda x: x[0])
+    for num,p in temp:
+        ans.append(p)
+    # 어떤 차량이 입차된 후에 출차된 내역이 없다면 23:59에 출차된 것으로 간주
+    # 1. '누적' 주차 시간이 기본 시간 이하일 경우 기본 요금 청구
+    # 2. '누적' 주차 시간이 기본 시간 초과일 경우 기본 요금 + 초과된 시간에 대해 단위 시간별 단위 요금 청구
+    # 초과 시간이 단위 시간으로 나눠 떨어지지 않으면 올림
+    # 차량 번호가 작은 자동차부터 주차 요금을 차례대로 배열에 담아 return
+    return ans
