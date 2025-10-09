@@ -1,28 +1,29 @@
-from itertools import permutations
+from itertools import permutations as perm
+
+def cal(x,y,t):
+    if t == '*': return x * y
+    elif t == '-': return x - y
+    else: return x + y
+
 def solution(exp):
-    ans = []
-    for priority in permutations(['*','-','+'],3):
-        nums = exp
-        for p in priority:
-            nums = nums.replace(p, ' ')
-        nums = list(map(int, nums.split()))
-        ops = [op for op in exp if op in '*-+']
-        for p in priority:
-            while p in ops:
-                i = ops.index(p)
-                v = 0
-                
-                if p == '*':
-                    v = nums[i] * nums[i+1]
-                elif p == '+':
-                    v = nums[i] + nums[i+1]
-                else:
-                    v = nums[i] - nums[i+1]
-                nums[i] = v
-                nums.pop(i+1)
+    ans = 0
+    
+    for p in perm(['*','+','-'],3):
+        # 우선 순위 결정
+        total = 0
+        copy = exp
+        for char in p:
+            copy = copy.replace(char,' ')
+        copy = copy.split(' ')
+        ops = [o for o in exp if o in ['*','-','+']]
+        for char in p:
+            while char in ops:
+                i = ops.index(char)
+                ex = int(copy[i])
+                nxt = int(copy[i+1])
+                value = cal(ex,nxt,char)
+                copy[i] = value
+                copy.pop(i+1)
                 ops.pop(i)
-        ans.append(abs(nums[0]))
-        a = 0
-        for i in ans:
-            a = max(a,i)
-    return a
+        ans = max(ans,abs(copy[0]))
+    return ans
