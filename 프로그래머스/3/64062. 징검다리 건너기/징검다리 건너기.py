@@ -1,22 +1,26 @@
 def solution(stones, k):
-    ans = 0
-    # 1 - k안에 건널 수 없으면 무슨 수를 써도 못 건넌다.
-    l = 1
     r = max(stones)
-    while l <= r:
-        m = (l+r)//2
-        # 연속으로 건너 뛰는 게 최대 k 이상이면 안 된다
-        cross = 0
+    l = 1
+    ans = 0
+    while r >= l:
+        # 최대로 건널 수 있는 사람의 수
+        mid = (r+l) // 2
+        flag = True
+        # 연속 건너기가 k이상이면 실패
+        ps = 0
         for s in stones:
-            if s < m:
-                cross += 1
-                if cross >= k:
+            if s < mid:
+                ps += 1
+                if ps >= k:
+                    flag = False
                     break
-            else:
-                cross = 0
-        if cross >= k:
-            r = m - 1
+            else: ps = 0
+        
+        # 다 건널 수 있다면 l을 늘리기
+        if flag:
+            l = mid + 1
+        # 다 건널 수 없다면 r을 줄이기
         else:
-            ans = max(ans,m)
-            l = m + 1
-    return ans
+            r = mid - 1
+    print(l,r,ans)
+    return r
