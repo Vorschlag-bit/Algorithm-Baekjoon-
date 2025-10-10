@@ -1,22 +1,26 @@
+from itertools import combinations as comb
 from itertools import permutations as perm
-def solution(user_id, banned_id):
-    ans = set()
-    n = len(user_id)
-    m = len(banned_id)
-    def check(p_id,b_id):
-        flag = True
-        for p,b in zip(p_id,b_id):
-            if len(p) != len(b):
-                flag = False
-                break
-            for pchar,bchar in zip(p,b):
-                if bchar != '*' and bchar != pchar:
-                    flag = False
+def solution(user, bann):
+    ans = 0
+    
+    # 조합
+    for c in comb(user,len(bann)):
+        # 조합 속에서 하나의 순열이라도 일치하면 ans += 1
+        for perms in perm(bann,len(bann)):
+            f = True
+            for u,b in zip(c,perms):
+                # 길이가 안 맞으면 pass
+                if len(u) != len(b):
+                    f = False
                     break
-        return flag
-    # 순열로 풀기
-    for p in perm(user_id, m):
-        if check(p,banned_id):
-            key = frozenset(p)
-            ans.add(key)
-    return len(ans)
+                for i in range(len(u)):
+                    if b[i] == '*': continue
+                    if b[i] != u[i]:
+                        f = False
+                        break
+            if f:
+                # print(f"찾은 순열: {perms}")
+                ans += 1
+                break
+    
+    return ans
