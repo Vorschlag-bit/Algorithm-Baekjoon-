@@ -1,22 +1,20 @@
 def solution(info, n, m):
     ans = float('inf')
+    l = len(info)
     visit = set()
-    def dfs(aSum,bSum,idx):
-        nonlocal ans
-        if aSum >= n:
+    def dfs(idx,a_sum,b_sum):
+        nonlocal ans,l,n,m
+        if a_sum >= n: return
+        if b_sum >= m: return
+        if a_sum >= ans: return
+        if idx == l:
+            ans = min(ans,a_sum)
             return
-        if bSum >= m:
+        k = (idx,a_sum,b_sum)
+        if k in visit:
             return
-        if aSum >= ans:
-            return
-        if idx == len(info):
-            # 물건을 다 훔쳤을 때, 최소의 answer
-            ans = min(ans, aSum)
-            return
-        if (aSum,bSum,idx) in visit:
-            return
-        visit.add((aSum,bSum,idx))
-        dfs(aSum + info[idx][0],bSum,idx+1)
-        dfs(aSum, bSum + info[idx][1],idx+1)
+        visit.add(k)
+        dfs(idx+1,a_sum+info[idx][0],b_sum)
+        dfs(idx+1,a_sum,b_sum+info[idx][1])
     dfs(0,0,0)
     return ans if ans < n else -1
