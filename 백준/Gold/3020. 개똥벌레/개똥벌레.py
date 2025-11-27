@@ -2,21 +2,21 @@ from sys import stdin as input
 
 n,h = map(int,input.readline().split())
 
+# 죽순 누적합
 up = [0] * (h+1)
+# 종유석 누적합
 down = [0] * (h+1)
-i = 0
 
+i = 0
 for _ in range(n):
     num = int(input.readline())
-    # i가 짝수면 h-1부터 0
-    # i가 홀수면 0부터 h-1
     if i % 2 == 0:
         up[num] += 1
     else:
         down[num] += 1
     i += 1
 
-# 높은 곳에서 낮은 곳으로 누적합
+# 누적합을 역으로 쌓는 의미: 높이(인덱스) 이상의 값의 개수
 for i in range(h-1,0,-1):
     up[i] += up[i+1]
     down[i] += down[i+1]
@@ -25,13 +25,10 @@ ans = float('inf')
 cnt = 0
 
 for i in range(1,h+1):
-    # 종유석은 역순으로 누적해서 down[i] 이상의 것들만 걸림
-    # 석순은 h-1-i 이상의 것들만 걸림
-    count = down[i] + up[h + 1 -i]
-    if count < ans:
-        ans = count
+    c = up[i] + down[h + 1 - i]
+    if c < ans:
+        ans = c
         cnt = 1
-    elif count == ans:
+    elif c == ans:
         cnt += 1
-
 print(f"{ans} {cnt}")
