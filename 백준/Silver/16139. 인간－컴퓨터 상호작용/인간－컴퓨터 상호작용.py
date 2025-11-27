@@ -15,19 +15,22 @@ for _ in range(q):
 
 # q = 20만, 문자열 길이 = 20만
 # a-z
-char = [[0] * 26]
+char = [[0] * (n + 1) for _ in range(26)]
 
 # idx와 char를 통해, 해당 char아 char 등장 배열의 idx에 등장했음을 + 1
 for i,c in enumerate(s):
     idx = ord(c) - 97
-    cur = char[-1][:]
-    cur[idx] += 1
-    char.append(cur)
+    char[idx][i+1] += 1
+
+# 모든 알파벳 배열의 누적합
+for i in range(26):
+    for j in range(1, n+1):
+        char[i][j] += char[i][j-1]
     
 # cmd 배열을 순회하면서 계산
 result = []
 for a,l,r in cmd:
     idx = ord(a) - 97
-    result.append(str(char[r+1][idx] - char[l][idx]))
+    result.append(str(char[idx][r+1] - char[idx][l]))
 
 print('\n'.join(result))
