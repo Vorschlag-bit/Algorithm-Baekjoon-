@@ -19,11 +19,16 @@ def get_c(cur,nxt):
     if (cur+2)%4 == nxt%4: return 4
     # 인접
     else: return 3
+
 dp[0][0][0] = 0
 for i in range(len(cmd)-1):
     nxt = cmd[i]
     for r in range(5):
         for l in range(5):
+            # 둘 다 같은 발이면 안 됌
+            if r != 0 and l != 0 and r == l: continue
+            # 해당 스탭이 애초에 불가능한 경우면 pass
+            if dp[i][l][r] == float('inf'): continue
             l_c = get_c(l,nxt)
             r_c = get_c(r,nxt)
             # 왼발
